@@ -1,40 +1,40 @@
 #include <iostream>
 #include <iomanip>
+#include <math.h>
 #include "../include/pbPlots.hpp"
 #include "../include/supportLib.hpp"
 
 using namespace std;
 
-int main ()
+int main (int argc, char** argv)
 {
 	// Input
-	int n;
-	cout << "enter duration of experiment\nduration: ";
-	cin >> n;
-
+	int n = atoi(argv[1]);
+	
 	// Variable Declaration
 	double m = 1.0;
 	double k = 20.0;
 	double h = 0.001;
-
+	
 	double x[n];
 	x[0] = 1.0;
-	float v[n];
+	double v[n];
 	v[0] = 0.0;
 	double a[n];
 	a[0] = -20.0;
 	double t[n];
 	t[0] = 0.0;
 
+	double A = (1 - k * h * h / (4 * m)) / (1 + k * h * h / (4 * m));
+	double B = h / (1 + k * h * h / (4 * m));
+
 	// Algorithm
 	for (int i = 1; i < n; i++)
 	{
 		t[i] = t[i - 1]+h;
-		//x[i] = x[i - 1] + (v[i - 1] * h);
-		x[i] = (x[i - 1] * ((k * (h * h)) / (4 * m))) + ((h * v[i - 1]) / (1 + ((k * (h * h)) / (4 * m))));
-		//v[i] = v[i - 1] + (a[i - 1] * h);
-		v[i] = ((-(k * h / m) / (1 + ((k * (h * h)) / (4 * m)))) * x[i - 1]) + ((1 + ((k * (h * h)) / (4 * m))) / (1 - ((k * (h * h)) / (4 * m))) * v[i - 1]);
-		a[i] = -k * x[i];
+		x[i] = x[i -1] * A + v[i - 1] * B;
+		v[i] = -x[i - 1] * B * k / m + v[i - 1] * A; 
+		//a[i] = -k * x[i];
 	}
 
 	// Output
